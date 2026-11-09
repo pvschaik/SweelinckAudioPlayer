@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="theme-color" content="#d2eeff">
+
+	<!-- PWA / home-screen support -->
+	<link rel="manifest" href="manifest.json">
+	<link rel="apple-touch-icon" href="icon-192.png">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="S">
+
+	<title>S</title>
+
+	<link rel="stylesheet" href="S2.css">
+
+	<script src="S2.js" defer></script>
+</head>
+
+
+<body onload="loadAudio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');">
+<!-- <body onload = "loadAudio('S.mp3');"> -->
+
+	<h1 id="headerSection" style="display: none">
+		<div class="headerRow">
+			<div id="letterLogo" onclick="openS();" onmouseover="showAbout();" onmouseout="hideAbout();">S</div>
+			<div id="aboutTitle">Let's get started.</div>
+		</div>
+	</h1>
+
+	<div id="headerDisplay">
+		<button id="concise" style="display: none" onclick="hideHeaderSection();" accesskey="c"><u>C</u>oncise</button>
+		<button id="verbose" onclick="showHeaderSection();" accesskey="v"><u>V</u>erbose</button>
+	</div>
+
+	<h3>Audio 2.0</h3>
+
+	<!-- File chooser -->
+	<div class="row">
+		<label>Audio: </label>
+		<input type="file" id="audioFileInput" accept="audio/*" onchange="loadLocalAudio(this);">
+		<label for="audioFileInput" accesskey="u"><u>U</u>pload audio</label>
+		<label id="currentAudio">current audio</label>
+	</div>
+
+	<!-- Player (near the top, within thumb reach on phones) -->
+	<div id="bottom">
+		<audio id="mediaPlayer" controls preload="metadata"></audio>
+	</div>
+
+	<!-- Volume, speed -->
+	<div class="row hoverRow">
+		<div id="volumeGroup" class="group">
+			<label>Volume: </label>
+			<button class="forward" id="bVolumeUp" onclick="changeVolume(0.1);" accesskey="9">+<u>/9</u></button>
+			<button class="back" id="bVolumeDown" onclick="changeVolume(-0.1);" accesskey="0">-<u>/0</u></button>
+		</div>
+		<div class="group">
+			<label>Speed: </label>&nbsp;<label id="currentSpeed">100%</label>
+		</div>
+		<div class="keys keys4">
+			<div class="key"><label class="shortCut" id="SpeedPlus1">Ctrl + 1</label>
+				<button class="forward" id="bSpeedPlus1" onclick="changePlaybackSpeed(0.01);">+1%</button></div>
+			<div class="key"><label class="shortCut" id="SpeedPlus10">Ctrl + 2</label>
+				<button class="forward" id="bSpeedPlus10" onclick="changePlaybackSpeed(0.10);">+10%</button></div>
+			<div class="key"><label class="shortCut" id="SpeedMinus1">Ctrl + 3</label>
+				<button class="back" id="bSpeedMinus1" onclick="changePlaybackSpeed(-0.01);">-1%</button></div>
+			<div class="key"><label class="shortCut" id="SpeedMinus10">Ctrl + 4</label>
+				<button class="back" id="bSpeedMinus10" onclick="changePlaybackSpeed(-0.10);">-10%</button></div>
+		</div>
+	</div>
+
+	<!-- Skip buttons -->
+	<div class="row hoverRow">
+		<div class="keys keys4">
+			<div class="key"><label class="shortCut" id="SC1">Alt + 1</label>
+				<button class="forward" id="bForward1s" onclick="advance(1);" accesskey="1">+ 1 s</button></div>
+			<div class="key"><label class="shortCut" id="SC2">Alt + 2</label>
+				<button class="forward" id="bForward10s" onclick="advance(10);" accesskey="2">+ 10 s</button></div>
+			<div class="key"><label class="shortCut" id="SC3">Alt + 3</label>
+				<button class="forward" id="bForward60s" onclick="advance(60);" accesskey="3">+ 1 m</button></div>
+			<div class="key"><label class="shortCut" id="SC4">Alt + 4</label>
+				<button class="forward" id="bForward600s" onclick="advance(600);" accesskey="4">+ 10 m</button></div>
+			<div class="key"><label class="shortCut" id="SC5">Alt + 5</label>
+				<button class="back" id="bBack1s" onclick="advance(-1);" accesskey="5">- 1 s</button></div>
+			<div class="key"><label class="shortCut" id="SC6">Alt + 6</label>
+				<button class="back" id="bBack10s" onclick="advance(-10);" accesskey="6">- 10 s</button></div>
+			<div class="key"><label class="shortCut" id="SC7">Alt + 7</label>
+				<button class="back" id="bBack100s" onclick="advance(-60);" accesskey="7">- 1 m</button></div>
+			<div class="key"><label class="shortCut" id="SC8">Alt + 8</label>
+				<button class="back" id="bBack600s" onclick="advance(-600);" accesskey="8">- 10 m</button></div>
+		</div>
+	</div>
+
+	<!-- Go to / forward / back by an amount of time -->
+	<div class="row timeRow">
+		<input id="minutes" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+			placeholder="min" aria-label="Minutes" value="0">
+		<label>m</label>
+		<input id="seconds" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+			placeholder="sec" aria-label="Seconds" value="1">
+		<label>s</label>
+		<button class="absoluteTimePoint" id="bGoNumber" onclick="setCurrentTime();" accesskey="G"><u>G</u>o to</button>
+		<button class="forward" id="bForwardNumber" onclick="advanceNumber(1);" accesskey="W">For<u>w</u>ard</button>
+		<button class="back" id="bBackNumber" onclick="advanceNumber(-1);" accesskey="B"><u>B</u>ack</button>
+		<button class="absoluteTimePoint" id="bResetToStart" onclick="resetToStart();" accesskey="R"><u>R</u>eset</button>
+		<button class="play" id="bPlay" onclick="playMedium();" accesskey="P"><u>P</u> l a y</button>
+		<button class="pause" id="bPause" onclick="pauseMedium();" accesskey="A">P<u>a</u>use</button>
+	</div>
+
+</body>
+</html>
