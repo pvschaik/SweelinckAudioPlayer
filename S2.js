@@ -249,3 +249,11 @@ if ("mediaSession" in navigator) {
 		try { navigator.mediaSession.setActionHandler(action, handlers[action]); } catch (e) {}
 	}
 }
+
+
+// ---- Offline support (service worker; requires HTTPS) ----
+if ("serviceWorker" in navigator) {
+	window.addEventListener("load", function () {
+		navigator.serviceWorker.register("sw.js").catch(function () { /* ignore */ });
+	});
+}
