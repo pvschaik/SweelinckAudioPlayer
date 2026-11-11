@@ -126,7 +126,11 @@ input[type="text"] {
 .timeRow { align-items: center; }
 .timeRow button { width: auto; min-width: 72px; flex: 0 1 auto; }
 
-.group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.group { display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+.volLabel { align-self: flex-end; margin-bottom: 13px; }   /* centre beside the buttons */
+
+.volKeys { display: flex; gap: 6px; }
 
 .keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 
@@ -150,6 +154,11 @@ input[type="text"] {
 @media (hover: hover) and (pointer: fine) {
 	.hoverRow { cursor: pointer; }
 	.hoverRow:hover .shortCut { visibility: visible; }
+	/* Volume labels: hidden, shown together while hovering either volume button */
+	.hoverRow:hover .hoverKey .shortCut { visibility: hidden; }
+	.hoverRow .volKeys:hover .hoverKey .shortCut { visibility: visible; }
+	/* While the pointer is over the volume controls, keep the speed labels hidden */
+	.hoverRow:has(#volumeGroup:hover) .keys4 .shortCut { visibility: hidden; }
 }
 
 /* Touch devices: no keyboard, so no shortcut labels or underlined access keys */

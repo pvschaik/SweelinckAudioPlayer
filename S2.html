@@ -54,9 +54,13 @@
 	<!-- Volume, speed -->
 	<div class="row hoverRow">
 		<div id="volumeGroup" class="group">
-			<label>Volume: </label>
-			<button class="forward" id="bVolumeUp" onclick="changeVolume(0.1);" accesskey="9">+<u>/9</u></button>
-			<button class="back" id="bVolumeDown" onclick="changeVolume(-0.1);" accesskey="0">-<u>/0</u></button>
+			<label class="volLabel">Volume: </label>
+			<div class="volKeys">
+				<div class="key hoverKey"><label class="shortCut" id="VolUp">Alt + 9</label>
+					<button class="forward" id="bVolumeUp" onclick="changeVolume(0.1);" accesskey="9">+<u>/9</u></button></div>
+				<div class="key hoverKey"><label class="shortCut" id="VolDown">Alt + 0</label>
+					<button class="back" id="bVolumeDown" onclick="changeVolume(-0.1);" accesskey="0">-<u>/0</u></button></div>
+			</div>
 		</div>
 		<div class="group">
 			<label>Speed: </label>&nbsp;<label id="currentSpeed">100%</label>
