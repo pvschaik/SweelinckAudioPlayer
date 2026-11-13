@@ -15,26 +15,17 @@ function changePlaybackSpeed(change) {
 
 }
 
+// Ctrl + 1..4 follow the order of the speed buttons on the page:
+// Ctrl+1 = -10%, Ctrl+2 = -1%, Ctrl+3 = +1%, Ctrl+4 = +10%
 document.addEventListener("keydown", function(event) {
 
-    if (event.ctrlKey && event.key == "1") {
-        event.preventDefault();
-        changePlaybackSpeed(0.01);
-    }
+    if (!event.ctrlKey) return;
 
-    if (event.ctrlKey && event.key == "2") {
-        event.preventDefault();
-        changePlaybackSpeed(0.10);
-    }
+    const changes = { "1": -0.10, "2": -0.01, "3": 0.01, "4": 0.10 };
 
-    if (event.ctrlKey && event.key == "3") {
+    if (event.key in changes) {
         event.preventDefault();
-        changePlaybackSpeed(-0.01);
-    }
-
-    if (event.ctrlKey && event.key == "4") {
-        event.preventDefault();
-        changePlaybackSpeed(-0.10);
+        changePlaybackSpeed(changes[event.key]);
     }
 });
 
