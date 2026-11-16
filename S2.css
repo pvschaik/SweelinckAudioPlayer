@@ -57,7 +57,13 @@ button:focus-visible, input:focus-visible {
 h1, h3 { margin: 0; text-align: center; }
 h2 { text-align: center; }
 
-label { background-color: white; }
+label { 
+	background-color: white; 
+	font-size: 1.2em;
+	display: flex;
+	align-items: center;       /* vertical */
+	justify-content: center;   /* horizontal */
+}
 
 label[for="audioFileInput"] {
 	background-color: rgb(220, 220, 220);
