@@ -45,6 +45,10 @@ function hideAbout() {
 
 function loadAudio(file) {
 	const player = document.getElementById("mediaPlayer");
+	if (player._objectURL) {          // free a previously loaded local file
+		URL.revokeObjectURL(player._objectURL);
+		player._objectURL = null;
+	}
 	prepareRestore(file);
 	player.src = file;
 	player.pause();
@@ -103,7 +107,11 @@ function pauseMedium() {
 function loadLocalAudio(input) {
 	const file = input.files[0];
 	if (!file) return;
+	loadFile(file, true);     // true: remember it for the next start
+}
 
+// Load a File object into the player (also used for the remembered file at start-up)
+function loadFile(file, remember) {
 	const url = URL.createObjectURL(file);
 	const player = document.getElementById("mediaPlayer");
 
@@ -123,6 +131,8 @@ function loadLocalAudio(input) {
 
 	player.playbackRate = 1;
 	document.getElementById("currentSpeed").textContent = "100%";
+
+	if (remember) saveLastAudio(file);
 }
 
 function hideHeaderSection() {
@@ -140,6 +150,66 @@ function showHeaderSection() {
 function changeVolume(pChange) {
 	const mediaPlayer = document.getElementById('mediaPlayer');
 	mediaPlayer.volume = Math.min(1.0, Math.max(0.0, mediaPlayer.volume + pChange));
+}
+
+
+// ---- Start-up: reload the most recently loaded sound file ----
+// A local file cannot be re-opened from its path in a browser, so a copy is kept
+// in IndexedDB (private to this app, on this device).
+const DEFAULT_AUDIO = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+const DB_NAME = "S-audio-player";
+const STORE_NAME = "lastAudio";
+let startupRestore = false;   // true while the remembered file is being loaded
+
+function openDb() {
+	return new Promise(function (resolve, reject) {
+		if (!window.indexedDB) { reject(new Error("IndexedDB unavailable")); return; }
+		const request = indexedDB.open(DB_NAME, 1);
+		request.onupgradeneeded = function () { request.result.createObjectStore(STORE_NAME); };
+		request.onsuccess = function () { resolve(request.result); };
+		request.onerror = function () { reject(request.error); };
+	});
+}
+
+function withStore(mode, action) {
+	return openDb().then(function (db) {
+		return new Promise(function (resolve, reject) {
+			const tx = db.transaction(STORE_NAME, mode);
+			const request = action(tx.objectStore(STORE_NAME));
+			tx.oncomplete = function () { db.close(); resolve(request.result); };
+			tx.onerror = tx.onabort = function () { db.close(); reject(tx.error); };
+		});
+	});
+}
+
+function saveLastAudio(file) {
+	withStore("readwrite", function (store) {
+		return store.put({ name: file.name, size: file.size, blob: file }, "last");
+	}).then(function () {
+		// ask the browser not to evict it (it may ignore this)
+		if (navigator.storage && navigator.storage.persist) {
+			navigator.storage.persist().catch(function () {});
+		}
+	}).catch(function () {
+		clearLastAudio();   // could not store (e.g. too big): do not leave an older file behind
+	});
+}
+
+function clearLastAudio() {
+	withStore("readwrite", function (store) { return store.delete("last"); }).catch(function () {});
+}
+
+function startApp() {
+	withStore("readonly", function (store) { return store.get("last"); })
+		.then(function (record) {
+			if (record && record.blob && record.blob.size > 0) {
+				startupRestore = true;
+				loadFile(new File([record.blob], record.name, { type: record.blob.type }), false);
+			} else {
+				loadAudio(DEFAULT_AUDIO);
+			}
+		})
+		.catch(function () { loadAudio(DEFAULT_AUDIO); });
 }
 
 
@@ -176,6 +246,15 @@ mediaPlayer.addEventListener("loadedmetadata", function () {
 	}
 	currentKey = pendingKey;
 	pendingKey = null;
+});
+
+// If the remembered file cannot be played, forget it and use the standard sound file
+mediaPlayer.addEventListener("loadedmetadata", function () { startupRestore = false; });
+mediaPlayer.addEventListener("error", function () {
+	if (!startupRestore) return;
+	startupRestore = false;
+	clearLastAudio();
+	loadAudio(DEFAULT_AUDIO);
 });
 
 // Save about every 2 seconds while playing, and on pause
