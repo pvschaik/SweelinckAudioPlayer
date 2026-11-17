@@ -138,12 +138,15 @@ function loadFile(file, remember) {
 function hideHeaderSection() {
 	document.getElementById('headerSection').style.display = 'none';
 	document.getElementById('concise').style.display = 'none';
-	document.getElementById('verbose').style.display = 'inline-block';
+	// document.getElementById('verbose').style.display = 'inline-block';
+	document.getElementById('verbose').style.display = 'flex';
+
 }
 
 function showHeaderSection() {
 	document.getElementById('headerSection').style.display = 'block';
-	document.getElementById('concise').style.display = 'inline-block';
+	// document.getElementById('concise').style.display = 'inline-block';
+	document.getElementById('concise').style.display = 'flex';
 	document.getElementById('verbose').style.display = 'none';
 }
 
