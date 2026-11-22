@@ -53,6 +53,22 @@
 		<audio id="mediaPlayer" controls preload="metadata"></audio>
 	</div>
 
+	<!-- Go to / forward / back by an amount of time -->
+	<div class="row timeRow">
+		<button class="play" id="bPlay" onclick="playMedium();" accesskey="P"><u>P</u>lay</button>
+		<button class="pause" id="bPause" onclick="pauseMedium();" accesskey="A">P<u>a</u>use</button>
+		<button class="absoluteTimePoint" id="bResetToStart" onclick="resetToStart();" accesskey="R"><u>R</u>eset</button>
+		<input id="minutes" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+			placeholder="min" aria-label="Minutes" value="0">
+		<label>m</label>
+		<input id="seconds" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+			placeholder="sec" aria-label="Seconds" value="1">
+		<label>s</label>
+		<button class="absoluteTimePoint" id="bGoNumber" onclick="setCurrentTime();" accesskey="G"><u>G</u>o to</button>
+		<button class="forward" id="bForwardNumber" onclick="advanceNumber(1);" accesskey="W">For<u>w</u>ard</button>
+		<button class="back" id="bBackNumber" onclick="advanceNumber(-1);" accesskey="B"><u>B</u>ack</button>
+	</div>
+
 	<!-- Volume, speed -->
 	<div class="row hoverRow">
 		<div id="volumeGroup" class="group">
@@ -101,22 +117,6 @@
 			<div class="key"><label class="shortCut" id="SC4">Alt + 8</label>
 				<button class="forward" id="bForward600s" onclick="advance(600);" accesskey="8">+ 10 m</button></div>
 		</div>
-	</div>
-
-	<!-- Go to / forward / back by an amount of time -->
-	<div class="row timeRow">
-		<input id="minutes" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
-			placeholder="min" aria-label="Minutes" value="0">
-		<label>m</label>
-		<input id="seconds" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
-			placeholder="sec" aria-label="Seconds" value="1">
-		<label>s</label>
-		<button class="absoluteTimePoint" id="bGoNumber" onclick="setCurrentTime();" accesskey="G"><u>G</u>o to</button>
-		<button class="forward" id="bForwardNumber" onclick="advanceNumber(1);" accesskey="W">For<u>w</u>ard</button>
-		<button class="back" id="bBackNumber" onclick="advanceNumber(-1);" accesskey="B"><u>B</u>ack</button>
-		<button class="absoluteTimePoint" id="bResetToStart" onclick="resetToStart();" accesskey="R"><u>R</u>eset</button>
-		<button class="play" id="bPlay" onclick="playMedium();" accesskey="P"><u>P</u>lay</button>
-		<button class="pause" id="bPause" onclick="pauseMedium();" accesskey="A">P<u>a</u>use</button>
 	</div>
 
 </body>
