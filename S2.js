@@ -96,10 +96,14 @@ function advanceNumber(pDirection) {
 
 function playMedium() {
 	document.getElementById("mediaPlayer").play();
+	document.getElementById("bPlay").style.display = "none";
+	document.getElementById("bPause").style.display = "block";
 }
 
 function pauseMedium() {
 	document.getElementById("mediaPlayer").pause();
+	document.getElementById("bPlay").style.display = "block";
+	document.getElementById("bPause").style.display = "none";
 }
 
 // (Shortcut-label show/hide is now done in CSS with :hover on desktop only.)
