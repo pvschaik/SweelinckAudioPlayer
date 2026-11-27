@@ -213,5 +213,13 @@ input[type="text"] {
 .pause { color: white; background-color: gray; }
 .play { color: white; background-color: rgb(0, 100, 0); font-weight: bold; }
 
+/* Greyed out and disabled (Play while playing, Pause while paused) */
+button:disabled {
+	background-color: lightgray;
+	color: gray;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
 td { vertical-align: middle; text-align: center; }
 th { text-align: center; vertical-align: middle; }

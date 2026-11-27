@@ -95,15 +95,19 @@ function advanceNumber(pDirection) {
 }
 
 function playMedium() {
-	document.getElementById("mediaPlayer").play();
-	document.getElementById("bPlay").style.display = "none";
-	document.getElementById("bPause").style.display = "block";
+	document.getElementById("mediaPlayer").play().catch(function () {});
 }
 
 function pauseMedium() {
 	document.getElementById("mediaPlayer").pause();
-	document.getElementById("bPlay").style.display = "block";
-	document.getElementById("bPause").style.display = "none";
+}
+
+// Play is disabled (greyed out) while playing, Pause while paused.
+// The look comes from the button:disabled rule in S2.css.
+function updatePlayPauseButtons() {
+	const playing = !mediaPlayer.paused && !mediaPlayer.ended;
+	document.getElementById("bPlay").disabled = playing;
+	document.getElementById("bPause").disabled = !playing;
 }
 
 // (Shortcut-label show/hide is now done in CSS with :hover on desktop only.)
@@ -207,6 +211,8 @@ function clearLastAudio() {
 }
 
 function startApp() {
+	updatePlayPauseButtons();
+
 	withStore("readonly", function (store) { return store.get("last"); })
 		.then(function (record) {
 			if (record && record.blob && record.blob.size > 0) {
@@ -273,6 +279,12 @@ mediaPlayer.addEventListener("timeupdate", function () {
 	}
 });
 mediaPlayer.addEventListener("pause", savePosition);
+
+// Keep the Play/Pause buttons in step with the player (also for the player's own
+// controls, the lock screen and Media Session)
+["play", "playing", "pause", "ended", "emptied"].forEach(function (name) {
+	mediaPlayer.addEventListener(name, updatePlayPauseButtons);
+});
 
 // Finished: forget the position so it starts from 0 next time
 mediaPlayer.addEventListener("ended", function () {
