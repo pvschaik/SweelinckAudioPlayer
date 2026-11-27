@@ -158,6 +158,12 @@ function showHeaderSection() {
 	document.getElementById('verbose').style.display = 'none';
 }
 
+// Show the volume as a percentage (also follows changes made by the browser or OS)
+function updateVolumeDisplay() {
+	document.getElementById("currentVolume").textContent =
+		Math.round(document.getElementById("mediaPlayer").volume * 100) + "%";
+}
+
 function changeVolume(pChange) {
 	const mediaPlayer = document.getElementById('mediaPlayer');
 	mediaPlayer.volume = Math.min(1.0, Math.max(0.0, mediaPlayer.volume + pChange));
@@ -312,6 +318,9 @@ document.addEventListener("visibilitychange", function () {
 	}
 	mediaPlayer.volume = old;
 })();
+
+mediaPlayer.addEventListener("volumechange", updateVolumeDisplay);
+updateVolumeDisplay();
 
 // Keep pitch natural at non-1x speeds (older Safari needs the prefixed property)
 mediaPlayer.preservesPitch = true;
